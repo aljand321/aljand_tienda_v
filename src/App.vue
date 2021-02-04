@@ -1,33 +1,56 @@
 <template>
-  <div id="app">
-    <div id="nav">
+  <div>
+    <div id="nav" v-if="isLoged">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link> |
-      <router-link to="/services">services</router-link>
+      <router-link to="/services">services</router-link> |
+      <input type="submit" value="Home" @click="click" />
     </div>
-    <router-view/>
+
+    <router-view />
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Login from "./views/Login";
+export default {
+  data: () => ({
+    isLoged: false,
+  }),
+  components: {
+    Login,
+  },
+  created() {
+    this.verifyToken();
+  },
+  mounted() {
+    console.log("esro");
+  },
+  methods: {
+    async verifyToken() {
+      const token = await JSON.parse(localStorage.getItem("UserDATA"))
 
-#nav {
-  padding: 30px;
-}
+      console.log(token, " esto es lo que quiero ver", this.isLoged);
+      if (token) {
+        this.isLoged = token.loged;
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+        /* if (this.$route.name == null) {
+          this.$router.push(await localStorage.getItem("route"));
+          this.$swal({
+            icon: "error",
+            title: "Oops...",
+            text: "No se puede navegar desde ahi",
+          });
+        } */
+        //console.log("111111, hay token")
+      } else {
+        //console.log("22222")
+        if (this.$route.path !== "/login") this.$router.push({ name: "Login" });
+      }
+    },
+    click() {
+      this.$router.push("/");
+    },
+  },
+};
+</script>
