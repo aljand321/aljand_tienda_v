@@ -28,7 +28,7 @@ const routes = [
     path: '/services',
     name: 'Services',
     component: Services
-  },
+  }
   
 ]
 
